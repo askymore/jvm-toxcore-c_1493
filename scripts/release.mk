@@ -11,11 +11,10 @@ release: _build/$(TARGET)/tox4j/libtox4j-c$(DLLEXT)
 	@echo 'No release done on branch "$(TRAVIS_BRANCH)"'
 else
 release: _build/$(TARGET)/tox4j/libtox4j-c$(DLLEXT) $(HOME)/.bintray/.credentials
-	rm -rf $(wildcard cpp/src/main/resources/im/tox/tox4j/impl/jni/*/)
+	rm -rf $(wildcard cpp/src/main/resources/im/tox/tox4j/impl/jni/$(TOX4J_PLATFORM)/)
 	mkdir -p cpp/src/main/resources/im/tox/tox4j/impl/jni/$(TOX4J_PLATFORM)/
 	cp $< cpp/src/main/resources/im/tox/tox4j/impl/jni/$(TOX4J_PLATFORM)/
-	-cd cpp && sbt bintrayUnpublish
-	cd cpp && sbt publish
+
 
 $(HOME)/.bintray/.credentials:
 	mkdir -p $(@D)
