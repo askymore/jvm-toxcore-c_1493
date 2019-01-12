@@ -60,3 +60,12 @@ scalaSource in Test    := (javaSource in Test   ).value
 // Override Scalastyle configuration for test.
 scalastyleConfigUrl in Test := None
 scalastyleConfig in Test := (scalaSource in Test).value / "scalastyle-config.xml"
+
+unmanagedSourceDirectories in Compile += baseDirectory.value / "src/main/resources"
+lazy val execBuild = taskKey[Unit]("local build")
+lazy val root = (project in file("."))
+  .settings(
+    execBuild := { "./build.sh" ! }
+  )
+//compile := (Compile / compile dependsOn execBuild).value
+publishM2 <<=(publishM2) dependsOn execBuild
