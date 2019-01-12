@@ -63,9 +63,19 @@ scalastyleConfig in Test := (scalaSource in Test).value / "scalastyle-config.xml
 
 unmanagedSourceDirectories in Compile += baseDirectory.value / "src/main/resources"
 lazy val execBuild = taskKey[Unit]("local build")
+// This prepends the String you would type into the shell
+lazy val startupTransition: State => State = { s: State =>
+  "execBuild" :: s
+}
 lazy val root = (project in file("."))
   .settings(
-    execBuild := { "./build.sh" ! }
+    execBuild := { "./build.sh" ! },
+      onLoad in Global := {
+      val old = (onLoad in Global).value
+      // compose the new transition on top of the existing one
+      // in case your plugins are using this hook.
+      startupTransition compose old
+    }
   )
 //compile := (Compile / compile dependsOn execBuild).value
-publishM2 <<=(publishM2) dependsOn execBuild
+//publishM2 <<=(publishM2) dependsOn execBuild
