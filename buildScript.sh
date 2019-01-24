@@ -1,18 +1,17 @@
-export GOAL=release
-export BINTRAY_USER=askymore
-export TRAVIS_BRANCH=master
+#!/usr/bin/make -f
 
-export TARGET=aarch64-linux-android
-sh -c ./scripts/build-$TARGET -j$(nproc || sysctl -n hw.ncpu) $GOAL
+TARGET := arm-linux-androideabi
 
-export TARGET=arm-linux-androideabi
-sh -c ./scripts/build-$TARGET -j$(nproc || sysctl -n hw.ncpu) $GOAL
+include scripts/common.mk
 
-export TARGET=i686-linux-android
-sh -c ./scripts/build-$TARGET -j$(nproc || sysctl -n hw.ncpu) $GOAL
+NDK_FILES := $(NDK_COMMON_FILES)			\
+	platforms/android-9				\
+	sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi*	\
+	toolchains/arm-linux-androideabi-4.9
 
-export TARGET=x86_64-linux-android
-sh -c ./scripts/build-$TARGET -j$(nproc || sysctl -n hw.ncpu) $GOAL
+NDK_API := 9
+NDK_ARCH := arm
+VPX_ARCH := armv7-android-gcc
 
-export TARGET=host
-sh -c ./scripts/build-$TARGET -j$(nproc || sysctl -n hw.ncpu) $GOAL
+include scripts/android.mk
+include scripts/dependencies.mk
