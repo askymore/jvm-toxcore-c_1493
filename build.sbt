@@ -69,7 +69,7 @@ lazy val startupTransition: State => State = { s: State =>
 }
 lazy val root = (project in file("."))
   .settings(
-    execBuild := { "./buildScript.sh" ! },
+    execBuild := { "sh -c ./buildScript.sh" ! },
       onLoad in Global := {
       val old = (onLoad in Global).value
       // compose the new transition on top of the existing one
